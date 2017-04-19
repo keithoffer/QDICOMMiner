@@ -38,7 +38,7 @@ from ui.mainWindow import Ui_MainWindow
 # Regex to match DICOM tags (i.e. the form (XXXX,XXXX) where X are case insensitive hex digits)
 # In this case, there are also match groups around each set of four hex digits
 dicom_tag_regex = r'\(((?i)[\da-f]{4}),((?i)[\da-f]{4})\)'
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -114,7 +114,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.actionLoad_Template.triggered.connect(self.load_template)
         self.ui.actionAbout.triggered.connect(self.open_about_window)
 
-        self.analyse_and_output_data_thread = None
+        self.analyse_and_output_data_thread = AnalyseAndOutputDataThread()
 
         self.show()
 
@@ -263,7 +263,6 @@ class MainWindow(QtWidgets.QMainWindow):
         header = header[0:-1]  # Remove the last comma
 
         self.ui.progressBar.show()
-        self.analyse_and_output_data_thread = AnalyseAndOutputDataThread()
         self.analyse_and_output_data_thread.current_file.connect(lambda num: self.ui.progressBar.setValue(num))
         self.create_csv.connect(self.analyse_and_output_data_thread.run)
         self.analyse_and_output_data_thread.finished.connect(self.csv_making_finished)
