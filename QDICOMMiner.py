@@ -272,14 +272,16 @@ class MainWindow(QtWidgets.QMainWindow):
         file_attributes = []
         for index in range(self.ui.listWidget.count()):
             custom_widget = self.ui.listWidget.itemWidget(self.ui.listWidget.item(index))
-            # Handle DICOM tags
             if custom_widget.comboBoxAttributeChoice.currentText() == AttributeOptions.FILE_INFORMATION.value:
+                # Handle file attributes (e.g. path, size etc)
                 header_file_info += custom_widget.comboBoxFileOption.currentText() + ','
                 file_attributes.append(custom_widget.comboBoxFileOption.currentText())
             else:
+                # Handle DICOM tags
                 text = custom_widget.lineEdit.text()
                 try:
                     if text == '':
+                        # We have to manually raise this as searching for '' won't throw an exception but won't work
                         raise KeyError
                     if re.match(dicom_tag_regex, text):
                         search_results = re.search(dicom_tag_regex, text)
@@ -297,13 +299,13 @@ class MainWindow(QtWidgets.QMainWindow):
                 header_DICOM += text.replace(',', ' ') + ','
             # Handle file attributes
 
-        header = (header_file_info + header_DICOM)[0:-1]  # Remove the last comma
+        csv_header = (header_file_info + header_DICOM)[0:-1]  # Remove the last comma
 
         self.ui.progressBar.show()
         self.analyse_and_output_data_thread.current_file.connect(lambda num: self.ui.progressBar.setValue(num))
         self.create_csv.connect(self.analyse_and_output_data_thread.run)
         self.analyse_and_output_data_thread.finished.connect(self.csv_making_finished)
-        self.create_csv.emit(self.ui.labelOutputFile.text(), self.ui.labelFolderToAnalysePath.text(), header, dicom_tags,file_attributes)
+        self.create_csv.emit(self.ui.labelOutputFile.text(), self.ui.labelFolderToAnalysePath.text(), csv_header, dicom_tags,file_attributes)
 
     def csv_making_finished(self):
         self.ui.progressBar.hide()
@@ -311,7 +313,8 @@ class MainWindow(QtWidgets.QMainWindow):
     create_csv = pyqtSignal(str, str, str, list,list)
     count_file_number = pyqtSignal(str)
 
-
+# This class is the main work thread, which iterates recusviley over all the files and
+# writes all the file information / DICOM data to the output csv
 class AnalyseAndOutputDataThread(QObject):
     def __init__(self):
         super(AnalyseAndOutputDataThread, self).__init__()
@@ -347,7 +350,6 @@ class AnalyseAndOutputDataThread(QObject):
                             pass
                     # Get the data from the tags
                     try:
-                        ds = pydicom.read_file(full_path)
                         for tag in dicom_tags:
                             output_line += get_dicom_value_from_tag(ds, tag) + ','
                         output_line = output_line[0:-1]  # Remove the last comma
@@ -364,7 +366,7 @@ class AnalyseAndOutputDataThread(QObject):
     current_file = pyqtSignal(int)
     finished = pyqtSignal()
 
-
+# Simple worker thread for counting the number of files recursively in a folder and subfolders
 class CountFilesThread(QObject):
     def __init__(self):
         super(CountFilesThread, self).__init__()
@@ -384,6 +386,7 @@ class CountFilesThread(QObject):
 
     num_of_files = pyqtSignal(int)
 
+
 class CustomListWidget(QtWidgets.QWidget):
     def __init__(self):
         super(CustomListWidget, self).__init__()
@@ -398,6 +401,10 @@ class CustomListWidget(QtWidgets.QWidget):
         self.comboBoxAttributeChoice.activated[str].connect(self.change_item_type)
         self.lineEdit.setStyleSheet("QLineEdit { background: rgb(255, 0, 0); }")
         self.pushButton = QPushButton("Delete")
+        self.pushButton.setMaximumWidth(100)
+        self.pushButton.setMinimumWidth(100)
+        self.comboBoxAttributeChoice.setMinimumWidth(150)
+        self.comboBoxAttributeChoice.setMaximumWidth(150)
         self.layout.addWidget(self.comboBoxAttributeChoice)
         self.layout.addWidget(self.comboBoxFileOption)
         self.layout.addWidget(self.lineEdit)
@@ -412,6 +419,7 @@ class CustomListWidget(QtWidgets.QWidget):
             self.comboBoxFileOption.setVisible(True)
             self.lineEdit.setVisible(False)
             self.lineEdit.setText('')
+
 
 class ClickableQLabel(QLabel):
     def __init__(self, parent=None):
