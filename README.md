@@ -1,4 +1,4 @@
-QDICOMMiner 1.0.1
+QDICOMMiner 1.1.0
 =================
 
 A small cross-platform program to extract DICOM metadata from a large number of DICOM files at once. I've only tested under Linux and Windows, but macOS should work aswell. If you don't want to run the python script itself, Windows [binary releases](https://github.com/keithoffer/QDICOMMiner/releases) are available through github.
@@ -22,9 +22,9 @@ Usage
 -----
 
 1) Choose the input folder which will be traversed recursively for all valid DICOM files. Note the file count given is for ALL files, not just valid DICOM files.
-2) Choose an output file location
-3) Choose what DICOM metadata you want to extract from the files in the attributes section. You can either manually enter tags in the form (XXXX,XXXX) or type the description of the field if it is registered in the DICOM standard (autocomplete will help fill in entries of this form).  
-4) Once you have all the attributes you want listed, hit the Go! button
+2) Choose an output file location.
+3) Choose what information you want saved from each file. Basic file information can be saved (filename, path or size) aswell as DICOM metadata. You can either manually enter DICOM tags in the form (XXXX,XXXX) or type the description of the field if it is registered in the DICOM standard (autocomplete will help fill in entries of this form).  
+4) Once you have all the attributes you want listed, hit the Go! button.
 
 You can also save and load lists of attributes with the `File -> Save Template` and `File -> Load Template` options
 
