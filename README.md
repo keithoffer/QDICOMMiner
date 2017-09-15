@@ -3,7 +3,7 @@ QDICOMMiner 1.1.0
 
 A small cross-platform program to extract DICOM metadata from a large number of DICOM files at once. I've only tested under Linux and Windows, but macOS should work aswell. If you don't want to run the python script itself, Windows [binary releases](https://github.com/keithoffer/QDICOMMiner/releases) are available through github.
 
-![Screenshot showing_program](Screenshots/main_screenshot.png?raw=true)
+![Screenshot showing_program](Screenshots/animated_preview.gif?raw=true)
 
 Prerequisites
 -------------
