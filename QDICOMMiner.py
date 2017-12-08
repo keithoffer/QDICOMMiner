@@ -41,7 +41,7 @@ from yapsy.PluginManager import PluginManager
 # Regex to match DICOM tags (i.e. the form (XXXX,XXXX) where X are case insensitive hex digits)
 # In this case, there are also match groups around each set of four hex digits
 dicom_tag_regex = r'\(((?i)[\da-f]{4}),((?i)[\da-f]{4})\)'
-__version__ = '1.1.0'
+__version__ = '1.2.0'
 
 class AttributeOptions(Enum):
     DICOM_TAG = 'Dicom Tag'
