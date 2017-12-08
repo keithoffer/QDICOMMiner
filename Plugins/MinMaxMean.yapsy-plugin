@@ -1,0 +1,9 @@
+[Core]
+Name = Min Max Mean
+Module = MinMaxMean
+   
+[Documentation]
+Description = Example plugin to calculate the min, max and mean pixel values in a DICOM file
+Author = Keith Offer
+Version = 1.0.0
+Website = None
